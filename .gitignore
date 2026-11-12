@@ -1,0 +1,15 @@
+**/build/
+.gradle/
+.kotlin/
+local.properties
+secrets.properties
+logs/
+*.jks
+*.keystore
+.idea/
+*.iml
+.DS_Store
+.orchestrator/*.jsonl
+.orchestrator/*.err
+.orchestrator/*.log
+.tooling/
