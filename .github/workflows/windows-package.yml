@@ -2,6 +2,13 @@ name: Windows package
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+concurrency:
+  group: windows-package-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
