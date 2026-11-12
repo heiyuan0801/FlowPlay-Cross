@@ -7,6 +7,8 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 
 private val Accent = Color(0xFF149187)
 private val LightColors = lightColorScheme(
@@ -32,7 +34,12 @@ private val DarkColors = darkColorScheme(
 fun FlowTheme(forceDark: Boolean = false, content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = if (forceDark || isSystemInDarkTheme()) DarkColors else LightColors,
-        typography = Typography(),
+        typography = if (forceDark) Typography(
+            bodyLarge = TextStyle(fontSize = 20.sp, lineHeight = 30.sp),
+            bodyMedium = TextStyle(fontSize = 20.sp, lineHeight = 28.sp),
+            bodySmall = TextStyle(fontSize = 16.sp, lineHeight = 24.sp),
+            labelLarge = TextStyle(fontSize = 18.sp, lineHeight = 24.sp),
+        ) else Typography(),
         content = content,
     )
 }

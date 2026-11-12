@@ -1,6 +1,6 @@
 # FlowPlay-Cross 产品与工程规格
 
-版本 1.0.0，Round 0 / 0b，2026-11-12。开发者 jiesen，联系与反馈邮箱 heiyuan6@gmail.com。
+规格版本 1.1.0，Round M1，2026-11-12。开发者 jiesen，联系与反馈邮箱 heiyuan6@gmail.com。
 
 ## 1. 范围与参考基线
 
@@ -23,9 +23,10 @@ Apple 状态描述来自当前代码与上述历史。Android / Android TV / Win
 
 | 功能 | Apple 当前或历史状态 | Android 计划 | Android TV 计划 | Windows 计划 | 说明与验收重点 |
 | --- | --- | --- | --- | --- | --- |
-| 首页真实分区 | 已有继续观看、最近添加、电影、剧集 | M2 统一首页仓库 | R0b 真实空状态，M2 大海报横排与继续观看 | M2 自适应网格 | 空来源保持真实空状态 |
+| 首页真实分区 | 已有继续观看、最近添加、电影、剧集 | M1 CMS 分类与列表已完成，M2 统一首页仓库 | M1 CMS 横排已完成，M2 大海报与继续观看 | M1 CMS 已实现并在 macOS 验证，M2 自适应网格 | 空来源保持真实空状态 |
 | 五项主导航 | 当前 Apple 各平台布局不同 | R0 底部 首页 / 搜索 / 直播 / 下载 / 我的 | R0b 常驻侧边抽屉、五项导航与 D-pad 焦点 | R0 桌面侧栏同五项 | 历史媒体库能力进入首页与来源详情 |
-| 来源增删改、启停、刷新 | 当前 SourceManager 已有 | M1 来源管理 | M1 同 Android，遥控表单与系统输入法 | M1 同共享逻辑 | 多来源独立标识，删除来源保留独立下载 |
+| 来源增删改、启停、排序、刷新 | 当前 SourceManager 已有 | M1 已完成 | M1 已完成，遥控表单与系统输入法 | M1 已实现，macOS 已运行，Windows 待运行 | 多来源独立标识，删除来源保留独立下载 |
+| 来源 JSON 导入 / 导出 | Apple 来源模型作只读参考 | M1 已完成 SAF 与 URL 导入 | M1 URL 导入与设备文件选择能力反馈 | M1 原生文件对话框已实现，macOS 已运行 | schemaVersion 1，事务导入、规范化去重、逐项错误报告，导出排除请求头与潜在认证参数 |
 | Emby 多服务器登录 | 当前已有，凭证使用 Keychain | M2 Keystore 保护会话 | M2 同 Android，遥控输入与 Keystore | M2 Windows DPAPI 保护会话 | 密码仅认证时使用，服务器和用户作用域隔离 |
 | Emby 媒体库和分页 | 当前已有 | M2 分类、分页与筛选 | M2 大海报横排、分页与焦点恢复 | M2 同共享 Provider | 电影、剧集、季、集、年份、类型、排序 |
 | Emby 搜索与详情 | 当前已有 | M2 | M2 大屏详情与遥控分集选择 | M2 | 海报、背景、简介、关联外部 ID |
@@ -33,7 +34,7 @@ Apple 状态描述来自当前代码与上述历史。Android / Android TV / Win
 | Emby 开始 / 进度 / 停止上报 | 当前已有 | M3 生命周期与 MediaSession | M3 同 Android 播放会话 | M3 窗口与进程生命周期 | seek、暂停、切集、异常退出重试去重 |
 | Emby 继续观看与下一集 | 当前已有 | M3 | M3 遥控进入继续观看与下一集 | M3 | 服务端进度为 Emby 真值，保留本机暂存 |
 | Emby 下载权限 | 当前检查服务器许可 | M6 根据用户策略和下载接口开放 | M6 同 Android 许可检查 | M6 同共享许可检查 | 403 / 404、权限撤销与地址失效明确反馈 |
-| Apple CMS JSON / XML | 当前存在，默认高级开关隐藏 | M1 直接添加 | M1 同共享 CMS Provider | M1 直接添加 | 分类、分页、详情、线路、分集、请求头 |
+| Apple CMS JSON / XML | 当前存在，默认高级开关隐藏 | M1 已完成 JSON / XML | M1 已完成，同共享 Provider | M1 已实现，macOS 已运行，Windows 待运行 | 分类、分页、详情、线路、分集、请求头 |
 | CMS 离线下载 | `16af689` 移除新下载，保留完成文件 | M6 恢复 MP4 / HLS | M6 遥控选择分集与管理下载 | M6 同共享下载器 | 可选择单集、多集、全部，暂停恢复删除 |
 | TVBox URL / 本地配置 | `78b1e1c` 移除 | M5 恢复导入刷新 | M5 同 Android 导入刷新 | M5 恢复导入刷新 | 多仓 urls、sites、parses、lives、headers、ext |
 | TVBox JSONC 与包装 | 历史支持注释、尾逗号、Base64、图片尾部 | M5 共享解码器 | M5 同共享解码器 | M5 共享解码器 | 8 MiB、4 层包装上限，保留字符串中 URL |
@@ -43,14 +44,14 @@ Apple 状态描述来自当前代码与上述历史。Android / Android TV / Win
 | TVBox 解析线路 | 历史配置包含解析器 | M5 HTTP / JSON 解析，M8 WebView 嗅探适配 | M5 / M8 同 Android，遥控线路选择 | M5 HTTP / JSON，M8 桌面浏览器宿主评估 | 明确区分直接地址、解析请求与网页 |
 | TVBox 直播 | `78b1e1c` 移除 | M4 / M5 | M4 / M5 遥控上下换台、OK 控制 | M4 / M5 | group、频道、备用地址与台标 |
 | 独立直播 M3U / TXT | 历史已有 | M4 导入和播放 | M4 频道分组、上下换台与备用地址 | M4 导入和播放 | EXTINF、分组、逗号 TXT、多地址切换 |
-| 聚合搜索 | 当前覆盖 Emby、CMS、本地 | M2 分来源流式分页，M5 加 TVBox | M2 遥控与系统输入法，M5 加 TVBox | 同共享搜索器 | 标题、类型、年份保守聚合，可展开全部来源 |
+| 聚合搜索 | 当前覆盖 Emby、CMS、本地 | M1 CMS 分来源并发搜索与分页已完成，M2 聚合 | M1 CMS 搜索已完成，M2 聚合与焦点恢复 | M1 CMS 搜索已在 macOS 运行，M2 聚合 | 标题、类型、年份保守聚合，可展开全部来源 |
 | 来源切换与备用线路 | 当前已有替代项查询 | M3 / M5 | M3 / M5 遥控选择来源与线路 | M3 / M5 | 每个播放项保留实际 sourceId，失败有原因 |
 | TMDB 元数据 | 当前已有匹配、海报、简介、演职员、季集 | M2 Ktor + Coil 3 | M2 大海报 / 背景 / 详情，同共享缓存 | M2 同共享服务 | 优先外部 ID，其次标题 / 年份 / 类型置信度 |
 | TMDB 人工匹配 | 当前有选项与本机匹配记录 | M2 手工选匹配 | M2 遥控选择匹配项 | M2 手工选匹配 | 同名重拍与剧集类型避免误合并 |
 | TMDB 热门榜单 | `77a159e` 新增，`12e3f09` 移除入口 | M7 恢复首页榜单 | M7 大海报横排与遥控浏览 | M7 恢复首页榜单 | 今日、本周、热门电影、热门剧集、高分电影 / 剧集 |
 | 热门详情匹配自有来源 | 历史已有 | M7 详情与聚合搜索衔接 | M7 详情与来源搜索衔接 | M7 同共享逻辑 | TMDB 条目 ID 与实际播放媒体 ID 独立 |
 | TMDB 缓存 | 当前 7 天刷新，180 天绝对删除 | M2 共享缓存策略 | M2 同 Android 缓存策略 | M2 共享缓存策略 | 见数据模型章节 |
-| 详情与分集选择 | 当前已有，详情后播放 | M2 / M3 | M2 / M3 遥控多季、多线路与分集 | M2 / M3 | 多季、多线路、集数、下载选择 |
+| 详情与分集选择 | 当前已有，详情后播放 | M1 CMS 已完成，M2 / M3 扩展 | M1 CMS 遥控线路与分集已完成，M2 / M3 扩展 | M1 CMS 已在 macOS 运行，M2 / M3 扩展 | M1 展示解析地址、复制与系统外部打开，M3 集成播放器 |
 | 收藏 / 稍后观看 / 历史 / 最近播放 | 当前已有本机集合 | M2 SQLDelight | M2 同共享数据库与焦点恢复 | M2 SQLDelight | 离线使用、唯一键、持久化与撤销 |
 | 评分与外部资料链接 | 当前有来源评分、TMDB / IMDb / 豆瓣链接 | M2 系统浏览器打开 | M2 按系统可处理能力提供入口 | M2 系统浏览器打开 | 豆瓣评分保留来源标识，外部资料与播放来源独立 |
 | 本地视频与外部字幕 | 当前导入复制、本机索引 | M4 SAF 与持久 URI 权限 | M4 系统文件选择与持久 URI 权限 | M4 文件选择、拖放、路径重定位 | 本地文件失效有恢复入口 |
@@ -66,7 +67,7 @@ Apple 状态描述来自当前代码与上述历史。Android / Android TV / Win
 | Google Cast | 当前 iPhone / iPad 原生 SDK | M6 Android 官方 Cast SDK | M6 按电视设备的 Cast SDK 能力接入 | M8 桌面 Cast v2 sender 适配评估 | Windows 官方 sender SDK 缺口单列 |
 | AirPlay 路由 | 当前 Apple 系统路由 | M8 AirPlay sender 可行性与兼容验证 | M8 同 Android 可行性验证 | M8 同协议实现研究 | Android / Windows 缺少 Apple 系统路由，兼容完成度待验证 |
 | 下载管理与存储用量 | 当前已有 | M6 工作任务、后台通知、存储统计 | M6 遥控任务管理与存储统计 | M6 下载队列、进程重启恢复 | 完成后无网播放、删除后空间恢复 |
-| 设置与持久化 | 当前 SwiftData / UserDefaults | M1 / M7 Settings + 数据库 | M1 / M7 大屏设置与共享持久化 | M1 / M7 Settings + 数据库 | 范围校验与运行时一致 |
+| 设置与持久化 | 当前 SwiftData / UserDefaults | M1 来源 SQLDelight 已完成，M7 偏好 | M1 来源持久化已完成，M7 大屏偏好 | M1 来源持久化已在 macOS 验证，M7 偏好 | 范围校验与运行时一致 |
 | 法律 / 关于 / 反馈 | 当前已有 | R0 版本、开发者、邮箱、mailto、简要说明，M8 完整许可页 | R0b 遥控阅读、滚动与邮件能力反馈 | 同 Android | 邮件由用户自行发送 |
 | 响应式、多窗口、无障碍 | Apple 各端原生布局 | M7 手机 / 平板 / 键盘 / TalkBack | R0b 10-foot / 高对比焦点，M7 完善无障碍 | M7 可调整窗口、多窗口与屏幕阅读 | 中文、深色、字体缩放、焦点可见 |
 
@@ -96,27 +97,29 @@ scripts/         环境与图标生成
 .orchestrator/   SPEC 与阶段报告
 ```
 
-入口依赖 `shared.ui`，UI 依赖应用状态与 Repository，Repository 依赖 Provider / Storage / Network。平台播放表面由平台组合到共享播放器控制层。UI 使用统一媒体标识和错误模型，源地址、认证与具体 Provider 请求在数据层处理。R0 已建立公共媒体、Provider 与 PlaybackEngine 契约，平台实现按后续里程碑落地。
+入口依赖 `shared.ui`，UI 依赖应用状态与 Repository，Repository 依赖 Provider / Storage / Network。平台播放表面由平台组合到共享播放器控制层。UI 使用统一媒体标识和错误模型，源地址、认证与具体 Provider 请求在数据层处理。R0 已建立公共媒体、Provider 与 PlaybackEngine 契约。M1 的 SourceRepository、CatalogHttp、CmsProvider 和来源 / 目录 UI 已接入，平台层注入数据库驱动、文件选择、剪贴板与外部打开。后续媒体类型继续扩展统一媒体契约。
 
 ### Android TV 入口与焦点
 
 R0b 复用 `androidApp` APK、applicationId、版本与数据层。`UiModeManager.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION` 决定电视布局。MainActivity 同时声明普通 LAUNCHER 与 LEANBACK_LAUNCHER，leanback 和 touchscreen 两个 uses-feature 均为 optional。320 × 180 的 xhdpi banner 由已复制的 Apple 原始图标生成，应用名直接合成到图中。共用 APK 可以沿用网络、Keystore、Media3 与后续数据库，手机和电视各自保留输入布局。当前规模由三模块承载。[Android TV 入口规范](https://developer.android.com/training/tv/get-started/create)
 
-`shared.ui.TvShell` 提供常驻侧边抽屉、32 dp 水平 / 24 dp 垂直安全边距、深色背景、20 sp 正文与 28–32 sp 标题。选中导航有底色，实际焦点有高对比填充与描边。使用现有 Compose Foundation / UI 的 focusGroup、FocusRequester、focusProperties、onFocusChanged、clickable 和 focusable，依赖沿用 Compose Multiplatform 1.9.3。上下移动导航，OK 进入对应栏目，右键进入内容，左键回到已选导航。进入子页聚焦返回按钮，返回恢复已选导航，内容区返回键先回侧栏，根导航返回交给系统。说明面板可以用上下键滚动，所有已显示操作均有实际页面或系统行为。[Compose 焦点控制](https://developer.android.com/develop/ui/compose/touch-input/focus/change-focus-behavior)
+`shared.ui.TvShell` 提供常驻侧边抽屉、32 dp 水平 / 24 dp 垂直安全边距、深色背景、20 sp 正文与 28–32 sp 标题。选中导航有底色，实际焦点有高对比填充与描边。使用现有 Compose Foundation / UI 的 focusGroup、FocusRequester、focusProperties、onFocusChanged、clickable 和 focusable，依赖沿用 Compose Multiplatform 1.9.3。上下移动导航，OK 进入对应栏目，右键进入内容，内容内左键优先移动到同排控件，离开内容焦点组时回到已选导航。文本框在系统输入法收起后通过上下键切换表单控件。进入子页聚焦返回按钮，返回恢复已选导航，内容区返回键先回侧栏，根导航返回交给系统。说明面板可以用上下键滚动，所有已显示操作均有实际页面或系统行为。[Compose 焦点控制](https://developer.android.com/develop/ui/compose/touch-input/focus/change-focus-behavior)
 
-R0b 来源为空，首页保留真实空状态。M2 有真实媒体后使用 LazyRow 大海报横排，海报目标约 148 × 222 dp，每行独立焦点组，按 MediaId 恢复位置，聚焦时滚入视口。大海报行随 M2 Provider 接入验收，使用来源实际媒体与匹配后的 TMDB 图像。
+M1 首页在来源为空或全部停用时保留真实空状态。启用 CMS 后呈现来源、分类与横排分页列表。M2 使用 LazyRow 大海报横排，海报目标约 148 × 222 dp，每行独立焦点组，按 MediaId 恢复位置，聚焦时滚入视口。大海报行随 M2 Provider 接入验收，使用来源实际媒体与匹配后的 TMDB 图像。
 
 M3 将电视遥控输入接到同一 PlaybackEngine。点播 OK 播放 / 暂停，左右快退 / 快进，Menu 或上键打开音轨 / 字幕 / 画质选择。返回优先关闭菜单、隐藏控制，再退出播放并上报进度。M4 / M5 的直播与 TVBox 播放在菜单关闭时用上下键切换频道，菜单展开时方向键只操作菜单。播放器按当前输入模式分发按键，避免频道切换与轨道菜单争用上键。媒体按键通过 MediaSession 处理。
 
-请求使用协程结构化并发。搜索随输入取消旧任务，来源分页独立推进，错误保留到各来源结果。播放引擎暴露 `StateFlow<PlaybackState>`，控制方法覆盖 load、play、pause、seek、rate、volume、音字幕轨、外部字幕、stop、release。认证 URL 与请求头使用瞬时普通类，避免数据类自动生成包含地址的日志文本。
+请求使用协程结构化并发。M1 搜索通过提交关键词启动，重复提交会刷新，重新提交取消旧任务，来源分页独立推进，错误保留到各来源结果。播放引擎暴露 `StateFlow<PlaybackState>`，控制方法覆盖 load、play、pause、seek、rate、volume、音字幕轨、外部字幕、stop、release。认证 URL 与请求头使用瞬时普通类，避免数据类自动生成包含地址的日志文本。
 
 ## 4. 数据与存储
 
-选用 SQLDelight 2.1.0，统一 SQL 与显式迁移，Android 驱动和 JVM SQLite 驱动分别注入。轻量偏好使用 multiplatform-settings 1.3.0，Android SharedPreferences、JVM 文件后端。桌面后端在 Windows 写入 `%LOCALAPPDATA%/FlowPlay`，macOS 日常运行使用用户应用支持目录。开发运行检查仅使用仓库 `logs/runtime`，R0 尚未创建用户数据库。
+M1 已接入 SQLDelight 2.1.0。Android 使用 AndroidSqliteDriver，在应用私有 databases/flowplay.db 创建或升级数据库。桌面使用 JdbcSqliteDriver，Windows 默认 `%APPDATA%/FlowPlay/flowplay.db`，macOS 默认 `~/Library/Application Support/FlowPlay/flowplay.db`，Linux 使用 XDG 数据目录。开发运行通过 JVM 属性 `flowplay.dataDir` 隔离到仓库 `logs/m1/desktop-data`，满足开发写入范围。
+
+当前数据库 schema 为版本 2。Sources.sq 描述当前结构，1.sqm 使用 ALTER TABLE 将版本 1 原地升级并加入 extraConfigJson，默认值为 `{}`。SQLDelight 驱动执行版本管理，M2 可通过 2.sqm 增加表。来源事务同时完成修改与重新读取，成功提交后才发布 StateFlow，写入或读取异常会回滚旧配置。轻量偏好库已锁定版本 1.3.0，通用偏好在后续阶段接入。
 
 | 数据 | 主键与字段 | 一致性 / 保留策略 |
 | --- | --- | --- |
-| Source | UUID、kind、name、endpoint、enabled、sortOrder、revision、lastRefreshAt | endpoint 规范化，导入事务提交，刷新失败保留旧配置 |
+| Source | id UUID、type、name、baseUrl、enabled、sortOrder、createdAt、updatedAt、extraConfigJson | M1 已落表，baseUrl 规范化且 type + baseUrl 唯一，来源为空初始零行，排序 / 导入事务提交，保存失败回滚 |
 | SourceSite | sourceId + siteKey、类型、ext 引用、能力、配置指纹 | 多仓子站点稳定身份，更新按 siteKey 合并 |
 | CredentialRef | sourceId + userId、系统安全存储引用 | 数据库只放引用，密码仅瞬时使用 |
 | Media / Library | sourceId + providerId、类型、父季集、公开外部 ID、标题与索引 | 同一标题跨源保留各自身份 |
@@ -141,7 +144,17 @@ Ktor 3.3.1，Android / Desktop 使用 OkHttp engine。kotlinx.serialization 1.9.
 
 HTTP 策略区分目录、搜索、播放、下载。目录连接约 15 秒，总请求约 30 秒。播放按引擎缓冲恢复策略处理长连接，下载使用读空闲超时。仅幂等 GET 使用有界指数退避，429 尊重 Retry-After，登录和播放事件依各自幂等语义重试。支持来源级 User-Agent、Referer 与必要请求头。跨主机重定向丢弃认证头，307 / 308 保持方法语义。来源错误携带中文可读原因、阶段和可重试标记。
 
-用户提供的 HTTP 局域网来源在明确选择后允许连接，平台网络配置在 M1 随导入一起启用。证书默认正常验证，调试代理配置仅用于开发工具链。聚合搜索初始并发上限 4，每源独立超时、分页和失败状态。预览骨架不向媒体服务器或 TMDB 发请求。
+用户提供的 HTTP 局域网来源在明确选择后允许连接，平台网络配置在 M1 随导入一起启用。证书默认正常验证，调试代理配置仅用于开发工具链。聚合搜索初始并发上限 4，每源独立超时、分页和失败状态。M1 仅向用户启用或主动测试的来源发请求。无来源时没有目录请求，TMDB 在 M2 接入。
+
+### M1 CMS 与来源交换
+
+来源表单支持名称、完整 HTTP / HTTPS 地址、JSON / XML / 自动识别、list / videolist / detail 列表动作和来源请求头 JSON。Ktor 请求覆盖 ac=list、ac=videolist、ac=detail&ids=、wd、t、pg。列表动作失败可回退 list，详情缺少条目可回退 videolist&ids=。JSON 数字与字符串标量、XML class / list / video / dl / dd、CDATA、字符编码声明映射到统一 CMS 模型。XML 拒绝 DTD 与实体声明，禁用外部实体加载。
+
+vod_play_from 与 vod_play_url 以 $$$ 保留线路位置，# 或换行拆分分集，首个 $ 分开名称与地址，兼容空线路名、空分集名、裸地址、空片段、相对路径及 XML dd flag。首页展示启用来源，搜索按来源并发执行并保留独立分页与错误。详情展示海报、简介、年份、地区、演员、导演和线路 / 分集。点击分集后展示地址，复制调用系统剪贴板，外部打开使用 Android ACTION_VIEW 或桌面 Desktop.browse。播放器集成仍在 M3。
+
+交换文档含 schemaVersion 1 与 sources 数组，每项含 type、name、baseUrl、enabled、config。导入最多 2 MiB / 500 项，先逐项校验，再用单事务加入有效且未重复的来源，已有来源保持配置与身份。错误报告包含序号和校验原因。Android 使用 SAF OpenDocument / CreateDocument，桌面使用原生 FileDialog，电视提供 URL 导入与文件选择能力错误反馈。
+
+导出采用固定字段白名单，config 仅包含格式与列表动作，请求头留在本机。当前只导出 CMS 的无查询参数公开地址，含查询参数或未来受保护类型的来源显示跳过数量，避免认证信息进入文件。Windows 原生文件选择与外部打开仍需 Windows 环境运行验证。
 
 ## 6. 播放器方案
 
@@ -200,7 +213,7 @@ Compose Desktop 原生分发配置 `packageName = FlowPlay`、vendor `jiesen`、
 | --- | --- | --- |
 | M0 / R0 | SPEC、工具链、wrapper、三模块、中文导航与空状态、图标、密钥注入、包装配置 | Android debug 构建，Mac 桌面 run / dmg / portable，模拟器与桌面截图，报告和提交 |
 | R0b / TV | 同 APK 电视入口、320 × 180 banner、10-foot 抽屉、D-pad / 返回 / 滚动焦点 | 手机回归，fp_tv arm64 TV 镜像安装、LEANBACK 启动与方向键截图，Android / Desktop 构建零 Kotlin 警告 |
-| M1 | 来源管理、SQLDelight 与迁移、Settings、Ktor、CMS JSON / XML 基础 | 两端新增 / 编辑 / 删除来源后重启保留，分页分类详情真实返回，失败保留旧配置 |
+| M1 已完成 | 来源管理、SQLDelight schema 2 与迁移、Ktor、CMS JSON / XML、来源 JSON 导入导出 | 手机 / TV 同包与 macOS 短时运行，重启保留，分类 / 分页 / 详情 / 搜索取自本机临时接口，失败保留旧配置，Windows 待运行 |
 | M2 | Emby 登录 / 库 / 搜索、首页、聚合搜索、收藏历史、TMDB 资料和缓存、TV 大海报横排与焦点恢复 | 两端真实目录与详情，多个来源流式结果，TMDB 匹配 / 缓存边界可观察 |
 | M3 | Media3 + FFmpeg 音频扩展、libmpv + JNA 原生打包、完整播放控制与进度、TV 遥控映射与控制菜单 | 两端真实本地 / 网络播放、seek / 多轨 / 字幕 / 下一集、Emby 上报与停止清理，Windows 原生包运行 |
 | M4 | 本地文件 / 拖放 / SAF、M3U / TXT 直播、TV 遥控换台 | 无网本地播放，列表分组、多地址和直播错误恢复 |
@@ -209,4 +222,4 @@ Compose Desktop 原生分发配置 `packageName = FlowPlay`、vendor `jiesen`、
 | M7 | TMDB 全部热门榜单、榜单匹配、缓冲偏好、响应式与键盘无障碍 | 来源为空仍可按配置查看真实 TMDB 榜单，匹配后进入来源详情，设置范围贯穿运行时 |
 | M8 | csp / JAR 宿主、Windows Cast / AirPlay 可行性、复杂字幕、完整许可、Windows 发布复核 | 扩展逐项兼容表、原生依赖许可与来源清单、Windows 真机短时验收、剩余平台差异明确记录 |
 
-R0 采用短时运行检查，按任务要求跳过单元测试。后续阶段分别记录编译、平台运行、真实服务器行为和实际接收端结果。当前原生播放器、媒体 Provider、来源保存、榜单、下载和投屏仍处于以上对应里程碑。
+R0 采用短时运行检查，按任务要求跳过单元测试。后续阶段分别记录编译、平台运行、真实服务器行为和实际接收端结果。M1 的来源持久化与 CMS Provider 已完成，验收证据见 report-m1.md。原生播放器、Emby / TVBox / 本地 Provider、榜单、下载和投屏按后续里程碑接入。

@@ -50,7 +50,7 @@ compose.desktop {
             packageVersion = project.version.toString()
             vendor = "jiesen"
             description = "FlowPlay 个人媒体中心"
-            modules("java.net.http", "java.prefs", "jdk.crypto.ec", "jdk.unsupported")
+            modules("java.net.http", "java.prefs", "java.sql", "java.xml", "jdk.crypto.ec", "jdk.unsupported")
             appResourcesRootDir.set(project.layout.projectDirectory.dir("native-resources"))
             macOS {
                 bundleID = "app.flowplay.cross"

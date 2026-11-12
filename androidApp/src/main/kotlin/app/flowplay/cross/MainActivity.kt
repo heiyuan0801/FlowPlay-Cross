@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import app.flowplay.cross.ui.FlowPlayApp
 
 class MainActivity : ComponentActivity() {
+    private val actions = AndroidActions(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,6 +26,9 @@ class MainActivity : ComponentActivity() {
             var feedbackError by remember { mutableStateOf<String?>(null) }
             FlowPlayApp(
                 desktop = false,
+                repository = (application as FlowPlayApplication).repository,
+                http = (application as FlowPlayApplication).http,
+                actions = actions,
                 television = television,
                 version = BuildConfig.VERSION_NAME,
                 feedbackError = feedbackError,

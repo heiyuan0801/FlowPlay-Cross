@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -28,13 +29,32 @@ kotlin {
             implementation(libs.ktor.core)
             implementation(libs.ktor.content.negotiation)
             implementation(libs.ktor.serialization)
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.coil)
+            implementation(libs.coil.network)
         }
-        androidMain.dependencies { implementation(libs.ktor.okhttp) }
+        androidMain {
+            kotlin.srcDir("src/jvmSharedMain/kotlin")
+            dependencies {
+                implementation(libs.ktor.okhttp)
+                implementation(libs.sqldelight.android)
+            }
+        }
         val desktopMain by getting {
+            kotlin.srcDir("src/jvmSharedMain/kotlin")
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.ktor.okhttp)
+                implementation(libs.sqldelight.jdbc)
             }
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("FlowDatabase") {
+            packageName.set("app.flowplay.cross.storage")
         }
     }
 }

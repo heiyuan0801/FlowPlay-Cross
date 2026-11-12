@@ -1,0 +1,31 @@
+CREATE TABLE sources (
+    id TEXT NOT NULL PRIMARY KEY,
+    type TEXT NOT NULL,
+    name TEXT NOT NULL,
+    baseUrl TEXT NOT NULL,
+    enabled INTEGER NOT NULL DEFAULT 1,
+    sortOrder INTEGER NOT NULL DEFAULT 0,
+    createdAt INTEGER NOT NULL,
+    updatedAt INTEGER NOT NULL,
+    extraConfigJson TEXT NOT NULL DEFAULT '{}'
+);
+CREATE UNIQUE INDEX sources_endpoint ON sources(type, baseUrl);
+
+selectAll:
+SELECT * FROM sources ORDER BY sortOrder, createdAt, id;
+
+insertSource:
+INSERT INTO sources(id, type, name, baseUrl, enabled, sortOrder, createdAt, updatedAt, extraConfigJson)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateSource:
+UPDATE sources SET name = ?, baseUrl = ?, enabled = ?, updatedAt = ?, extraConfigJson = ? WHERE id = ?;
+
+setEnabled:
+UPDATE sources SET enabled = ?, updatedAt = ? WHERE id = ?;
+
+setOrder:
+UPDATE sources SET sortOrder = ?, updatedAt = ? WHERE id = ?;
+
+deleteSource:
+DELETE FROM sources WHERE id = ?;

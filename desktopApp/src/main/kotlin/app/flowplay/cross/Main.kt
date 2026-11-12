@@ -1,6 +1,9 @@
 package app.flowplay.cross
 
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import app.flowplay.cross.network.CatalogHttp
+import app.flowplay.cross.storage.desktopSourceRepository
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -16,6 +19,10 @@ import java.net.URI
 import org.jetbrains.compose.resources.painterResource
 
 fun main() = application {
+    val repository = remember { desktopSourceRepository() }
+    val http = remember { CatalogHttp() }
+    val actions = remember { DesktopActions() }
+    DisposableEffect(Unit) { onDispose { http.close(); repository.close() } }
     Window(
         onCloseRequest = ::exitApplication,
         title = "FlowPlay",
@@ -25,6 +32,9 @@ fun main() = application {
         var feedbackError by remember { mutableStateOf<String?>(null) }
         FlowPlayApp(
             desktop = true,
+            repository = repository,
+            http = http,
+            actions = actions,
             version = "1.0.0",
             feedbackError = feedbackError,
             onFeedback = {

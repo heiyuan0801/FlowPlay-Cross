@@ -1,0 +1,3 @@
+-- Version 1 has the same sources columns and index, without extraConfigJson.
+-- SQLDelight creates version 2 directly for fresh installs and upgrades version 1 in place.
+ALTER TABLE sources ADD COLUMN extraConfigJson TEXT NOT NULL DEFAULT '{}';
