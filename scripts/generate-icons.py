@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Regenerate platform icons from the copied Apple artwork. Requires Pillow and macOS iconutil."""
 from pathlib import Path
+import argparse
 import subprocess
 
-from PIL import Image, ImageFilter, ImageOps
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
 ICONS = ROOT / "assets/icons"
@@ -49,7 +50,23 @@ def reference_background(reference):
     return patch.resize((1024, 1024), Image.Resampling.BICUBIC)
 
 
+def generate_tv_banner(mark, background):
+    banner = background.resize((1280, 720), Image.Resampling.LANCZOS).convert("RGBA")
+    artwork = ImageOps.contain(mark, (400, 440), Image.Resampling.LANCZOS)
+    banner.alpha_composite(artwork, (88, (720 - artwork.height) // 2))
+    draw = ImageDraw.Draw(banner)
+    font = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial Bold.ttf", 120)
+    draw.text((564, 360), "FlowPlay", font=font, fill="white", anchor="lm",
+              stroke_width=1, stroke_fill="white")
+    directory = RES / "drawable-xhdpi"
+    directory.mkdir(parents=True, exist_ok=True)
+    banner.convert("RGB").resize((320, 180), Image.Resampling.LANCZOS).save(directory / "tv_banner.png")
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--tv-banner-only", action="store_true")
+    args = parser.parse_args()
     source = Image.open(TRANSPARENT).convert("RGBA")
     mark = source.crop(source.getchannel("A").getbbox())
     artwork = ImageOps.contain(mark, (819, 819), Image.Resampling.LANCZOS)
@@ -57,6 +74,9 @@ def main():
     transparent.alpha_composite(artwork, ((1024 - artwork.width) // 2, (1024 - artwork.height) // 2))
     original = Image.open(OPAQUE).convert("RGB")
     background = reference_background(original)
+    generate_tv_banner(mark, background)
+    if args.tv_banner_only:
+        return
     opaque = Image.alpha_composite(background.convert("RGBA"), transparent).convert("RGB")
     ICONSET.mkdir(parents=True, exist_ok=True)
     for size in (16, 32, 128, 256, 512):

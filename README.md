@@ -1,6 +1,6 @@
 # FlowPlay-Cross
 
-FlowPlay 的 Android 与 Windows 版本，采用 Kotlin + Compose Multiplatform。当前版本 1.0.0，提供中文导航、真实空状态、来源接入说明、关于与系统邮件反馈。完整产品范围与阶段安排见 [.orchestrator/SPEC.md](.orchestrator/SPEC.md)。
+FlowPlay 的 Android 手机 / 平板、Android TV 与 Windows 版本，采用 Kotlin + Compose Multiplatform。当前版本 1.0.0，提供中文导航、真实空状态、来源接入说明、关于与系统邮件反馈。完整产品范围与阶段安排见 [.orchestrator/SPEC.md](.orchestrator/SPEC.md)。
 
 ## 本机工具链
 
@@ -37,6 +37,28 @@ adb emu kill
 ```
 
 AVD 使用 API 35 Google APIs arm64-v8a。模拟器准备与启动结果见本轮报告。`logs/` 为本机运行证据目录。
+
+## Android TV 短时运行
+
+手机与电视共用 `androidApp-debug.apk`。Activity 通过 UiModeManager 选择电视 10-foot 深色布局，电视提供五项侧栏与 D-pad 高对比焦点。上下键移动导航，OK 切换栏目，右键进入内容，左键返回已选导航，说明页支持上下滚动。进入子页后返回键恢复侧栏，内容区返回键先回侧栏。
+
+本机已安装 API 34 Android TV arm64-v8a revision 3，AVD `fp_tv` 使用 tv_1080p、1920 × 1080、320 dpi、2 CPU / 2 GiB RAM。AVD 数据位于 `.toolchains/avd/fp_tv.avd`。下面按 LEANBACK_LAUNCHER 解析入口，再显式启动解析到的 MainActivity，与电视 Launcher 启动入口一致。
+
+```sh
+source scripts/env.sh
+emulator -avd fp_tv -port 5556 -no-snapshot -no-audio -no-boot-anim
+# 另一个终端，启动后确认 sys.boot_completed 为 1
+adb -s emulator-5556 shell getprop sys.boot_completed
+adb -s emulator-5556 install -r androidApp/build/outputs/apk/debug/androidApp-debug.apk
+adb -s emulator-5556 shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LEANBACK_LAUNCHER app.flowplay.cross
+adb -s emulator-5556 shell am start -W -n app.flowplay.cross/.MainActivity -a android.intent.action.MAIN -c android.intent.category.LEANBACK_LAUNCHER
+adb -s emulator-5556 shell input keyevent DPAD_DOWN
+adb -s emulator-5556 shell input keyevent DPAD_RIGHT
+adb -s emulator-5556 exec-out screencap -p > logs/android-tv-home.png
+adb -s emulator-5556 emu kill
+```
+
+Round 0b 的首页展示空来源状态。真实媒体大海报横排在 M2 接入，播放器遥控在 M3，直播上下换台在 M4 / M5。TV banner 为 320 × 180，来源为 `assets/icons` 中已复制的 Apple 图标，可用 `python3 scripts/generate-icons.py --tv-banner-only` 单独重新生成。
 
 ## Windows x64 包装
 

@@ -1,7 +1,9 @@
 package app.flowplay.cross
 
+import android.app.UiModeManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,15 +19,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val television = getSystemService(UiModeManager::class.java).currentModeType ==
+            Configuration.UI_MODE_TYPE_TELEVISION
         setContent {
             var feedbackError by remember { mutableStateOf<String?>(null) }
             FlowPlayApp(
                 desktop = false,
+                television = television,
                 version = BuildConfig.VERSION_NAME,
                 feedbackError = feedbackError,
                 onFeedback = {
-                    val mail = Uri.parse("mailto:heiyuan6@gmail.com?subject=FlowPlay%20Android%20反馈" +
-                        "&body=" + Uri.encode("FlowPlay ${BuildConfig.VERSION_NAME}\nAndroid\n\n"))
+                    val platform = if (television) "Android TV" else "Android"
+                    val mail = Uri.parse("mailto:heiyuan6@gmail.com?subject=" +
+                        Uri.encode("FlowPlay $platform 反馈") + "&body=" +
+                        Uri.encode("FlowPlay ${BuildConfig.VERSION_NAME}\n$platform\n\n"))
                     try {
                         startActivity(Intent(Intent.ACTION_SENDTO, mail))
                         feedbackError = null

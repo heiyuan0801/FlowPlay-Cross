@@ -29,9 +29,9 @@ private val DarkColors = darkColorScheme(
 )
 
 @Composable
-fun FlowTheme(content: @Composable () -> Unit) {
+fun FlowTheme(forceDark: Boolean = false, content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = if (isSystemInDarkTheme()) DarkColors else LightColors,
+        colorScheme = if (forceDark || isSystemInDarkTheme()) DarkColors else LightColors,
         typography = Typography(),
         content = content,
     )

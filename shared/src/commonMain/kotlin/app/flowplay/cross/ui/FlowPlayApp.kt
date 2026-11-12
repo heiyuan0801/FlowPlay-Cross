@@ -57,7 +57,7 @@ import app.flowplay.cross.resources.Res
 import app.flowplay.cross.resources.flowplay_icon
 import org.jetbrains.compose.resources.painterResource
 
-private enum class Tab(val label: String, val icon: ImageVector) {
+internal enum class Tab(val label: String, val icon: ImageVector) {
     Home("首页", Icons.Default.Home),
     Search("搜索", Icons.Default.Search),
     Live("直播", Icons.Default.PlayArrow),
@@ -72,11 +72,28 @@ fun FlowPlayApp(
     version: String,
     onFeedback: () -> Unit,
     feedbackError: String? = null,
+    television: Boolean = false,
 ) {
     var selected by rememberSaveable { mutableStateOf(Tab.Home) }
     var page by rememberSaveable { mutableStateOf<String?>(null) }
     BackHandler(enabled = page != null) { page = null }
-    FlowTheme {
+    FlowTheme(forceDark = television) {
+        if (television) {
+            TvShell(
+                selected = selected,
+                page = page,
+                version = version,
+                onFeedback = onFeedback,
+                feedbackError = feedbackError,
+                onSelect = {
+                    selected = it
+                    page = null
+                },
+                onPage = { page = it },
+                onBack = { page = null },
+            )
+            return@FlowTheme
+        }
         Surface(Modifier.fillMaxSize()) {
             Row {
                 if (desktop) {
@@ -229,11 +246,7 @@ private fun AddSourcePage() {
         Text("当前为 1.0.0 工程预览。下一阶段将开放来源配置与导入。", color = MaterialTheme.colorScheme.onSurfaceVariant)
         Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)) {
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                SourceDescription("Emby", "连接服务器，浏览媒体库与同步播放进度")
-                SourceDescription("Apple CMS", "JSON / XML 接口、多线路与分集")
-                SourceDescription("TVBox", "配置导入、JS 爬虫与直播")
-                SourceDescription("直播列表", "M3U / TXT 频道列表")
-                SourceDescription("本地文件", "导入本机视频与字幕")
+                SourceDescriptions.forEach { (title, description) -> SourceDescription(title, description) }
             }
         }
     }
@@ -300,5 +313,13 @@ private fun LegalPage(title: String, text: String) {
     }
 }
 
-private const val PrivacyText = "当前工程预览没有媒体来源和账号数据，也没有分析或自动上报。后续添加的来源、观看记录和下载将保存在本机。意见反馈通过系统邮件程序打开，你可以编辑、取消或自行发送。预填内容只包含应用版本与平台。开发者 jiesen，联系邮箱 heiyuan6@gmail.com。"
-private const val UsageText = "FlowPlay 是个人媒体中心。媒体来自用户添加的服务器、CMS、TVBox、直播列表或本地文件。请确保拥有访问、下载及投屏所需的授权。TMDB 提供海报、详情、剧集资料与热门榜单，具体播放来自用户自己的媒体来源。第三方服务及开源组件遵循各自许可。"
+internal const val PrivacyText = "当前工程预览没有媒体来源和账号数据，也没有分析或自动上报。后续添加的来源、观看记录和下载将保存在本机。意见反馈通过系统邮件程序打开，你可以编辑、取消或自行发送。预填内容只包含应用版本与平台。开发者 jiesen，联系邮箱 heiyuan6@gmail.com。"
+internal const val UsageText = "FlowPlay 是个人媒体中心。媒体来自用户添加的服务器、CMS、TVBox、直播列表或本地文件。请确保拥有访问、下载及投屏所需的授权。TMDB 提供海报、详情、剧集资料与热门榜单，具体播放来自用户自己的媒体来源。第三方服务及开源组件遵循各自许可。"
+
+internal val SourceDescriptions = listOf(
+    "Emby" to "连接服务器，浏览媒体库与同步播放进度",
+    "Apple CMS" to "JSON / XML 接口、多线路与分集",
+    "TVBox" to "配置导入、JS 爬虫与直播",
+    "直播列表" to "M3U / TXT 频道列表",
+    "本地文件" to "导入本机视频与字幕",
+)
